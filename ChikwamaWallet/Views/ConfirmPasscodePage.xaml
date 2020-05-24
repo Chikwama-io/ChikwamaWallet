@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="ChikwamaWallet.Views.ConfirmPasscodePage"
+             Title="Create Wallet - Step 2">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color
+                x:Key="ColorPrimary">#7C067C</Color>
+            <Color
+                x:Key="ColorTextPrimary">#FFFFFF</Color>
+            <Color
+                x:Key="ColorTextSecondary">#B2B2B2</Color>
+            <Color
+                x:Key="ColorTextAccent">#384951</Color>
+            <x:Double
+                x:Key="FontSizeNormal">16</x:Double>
+            <x:Double
+                x:Key="FontSizeXlarge">26</x:Double>
+            <x:Double
+                x:Key="FontSizeSmall">14</x:Double>
+            <OnPlatform
+                x:Key="NumberPadItemSize"
+                x:TypeArguments="GridLength"
+                Android="48"
+                iOS="40">
+            </OnPlatform>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid>
+        <StackLayout
+            Padding="24">
+            <Label
+                Text="Confirm your PIN"
+                TextColor="{StaticResource ColorTextAccent}"
+                FontSize="{StaticResource FontSizeXlarge}" />
+            <Label
+                Text="Your PIN is required to unlock your wallet"
+                TextColor="{StaticResource ColorTextAccent}"
+                FontSize="{StaticResource FontSizeNormal}" />
+            <Entry IsPassword="True" Placeholder="****" Keyboard="Numeric" Text="{Binding Passcode}"/>
+            <Button Command="{Binding ContinueCommand}" Text="Confirm"/>
+        </StackLayout>
+      
+    </Grid>
+</ContentPage>

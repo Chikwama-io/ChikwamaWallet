@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="ChikwamaWallet.Views.MainPage" BackgroundColor="#f2f4f8">
+    <ContentPage.Content>
+        <ListView class="MainmenuList" ItemsSource="{Binding Items}" RowHeight="80" SelectedItem="{Binding SelectedMenuItem}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Margin="8">
+                            <Label Text="{Binding Title}" FontAttributes="Bold" TextColor="Black"/>
+                            <Label Text="{Binding ItemDetails}" TextColor="{StaticResource ColorTextSecondary}"/>
+                        </StackLayout>
+                    </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+             
+        </ListView>
+        
+    </ContentPage.Content>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color
+                x:Key="ColorPrimary">#7C067C</Color>
+            <Color
+                x:Key="ColorTextPrimary">#FFFFFF</Color>
+            <Color
+                x:Key="ColorTextSecondary">#B2B2B2</Color>
+            <x:Double
+                x:Key="FontSizeNormal">16</x:Double>
+            <x:Double
+                x:Key="FontSizeSmall">14</x:Double>
+            <OnPlatform
+                x:Key="EntryRowHeight"
+                x:TypeArguments="GridLength"
+                Android="56"
+                iOS="48">
+            </OnPlatform>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+</ContentPage>
