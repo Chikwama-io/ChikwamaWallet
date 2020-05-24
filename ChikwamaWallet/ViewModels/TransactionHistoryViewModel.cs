@@ -24,6 +24,19 @@ namespace ChikwamaWallet.ViewModels
             set { _Transactions = value; OnPropertyChanged();}
         }
 
+        TransactionModel[] _Sent;
+        public TransactionModel[] Sent
+        {
+            get { return _Sent; }
+            set { _Sent = value; OnPropertyChanged(); }
+        }
+
+        TransactionModel[] _Received;
+        public TransactionModel[] Received
+        {
+            get { return _Received; }
+            set { _Received = value; OnPropertyChanged(); }
+        }
 
         readonly IAccountManager accountsManager;
         readonly NewWalletController controller;
@@ -42,12 +55,46 @@ namespace ChikwamaWallet.ViewModels
         {
             IsFetching = true;
 
-            //var receiving = await accountsManager.GetTransactionsAsync();
-            //var sending = await accountsManager.GetTransactionsAsync(true);
+            var receiving = new List <TransactionModel>();
+            var sending = new List<TransactionModel>();
 
-             Transactions = await accountsManager.GetTransactionsAsync();
-           
+            Transactions = await accountsManager.GetTransactionsAsync();
+            foreach (var trans in Transactions)
+            {
+                if (trans.Inward)
+                {
+
+                    var mytrans = new TransactionModel
+                    {
+                        Sender = trans.Sender,
+                        Receiver = trans.Receiver,
+                        Amount = trans.Amount,
+                        Inward = trans.Inward,
+                        Timestamp = trans.Timestamp
+                    };
+                    receiving.Add(mytrans);
+                }
+                else 
+                {
+
+                    var mytrans = new TransactionModel
+                    {
+                        Sender = trans.Sender,
+                        Receiver = trans.Receiver,
+                        Amount = trans.Amount,
+                        Inward = trans.Inward,
+                        Timestamp = trans.Timestamp
+                    };
+
+                    sending.Add(mytrans);
+                }
+                
+            }
+
+            Sent = sending.ToArray();
+            Received = receiving.ToArray();
             IsFetching = false;
+
         }
         public override async Task Init()
         {

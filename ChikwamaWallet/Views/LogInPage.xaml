@@ -108,10 +108,8 @@
             </StackLayout>
             <StackLayout 
             Orientation ="Vertical"
-            HorizontalOptions	=	"CenterAndExpand"
-            VerticalOptions	=	"CenterAndExpand"
-            IsVisible= "{Binding IsProcessBusy}">
-                <Label Text="Unlocking your Wallet..." TextColor="{StaticResource ColorPrimary}" FontSize="{StaticResource FontSizeNormal}"/>
+             IsVisible= "{Binding IsProcessBusy}">
+                <Label VerticalOptions="Center" HorizontalOptions="Center" Text="Unlocking your Wallet..." TextColor="{StaticResource ColorPrimary}" FontSize="{StaticResource FontSizeNormal}"/>
                 <ActivityIndicator Color= "{StaticResource ColorPrimary}" IsRunning="True"/>
             </StackLayout>
             <ContentView

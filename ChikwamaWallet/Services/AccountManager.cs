@@ -117,6 +117,7 @@ namespace ChikwamaWallet.Services
 
 
 
+            List<TransactionModel> mytransactions = new List<TransactionModel>();
             foreach (var eventlog in transferEventLogs)
             
             {
@@ -126,22 +127,22 @@ namespace ChikwamaWallet.Services
 
                     var block = await web3.Eth.Blocks.GetBlockWithTransactionsByNumber.SendRequestAsync(eventlog.Log.BlockNumber);
 
-                    TransactionModel[] mytransactions = new TransactionModel[]
-                     {
-                             new TransactionModel{
-                            Sender = eventlog.Event.From,
-                            Receiver = eventlog.Event.To,
-                            Amount = Web3.Convert.FromWei(eventlog.Event.Value),
-                            Inward = eventlog.Event.To.ToString() == DefaultAccountAddress.ToLower(),
-                            Timestamp = (long)block.Timestamp.Value
-                             }
+                    
+                    var mytrans = new TransactionModel
+                    {
+                        Sender = eventlog.Event.From,
+                        Receiver = eventlog.Event.To,
+                        Amount = Web3.Convert.FromWei(eventlog.Event.Value),
+                        Inward = eventlog.Event.To.ToString() == DefaultAccountAddress.ToLower(),
+                        Timestamp = (long)block.Timestamp.Value
                     };
 
-                    return mytransactions;
+                    mytransactions.Add(mytrans);
                     
                 }
             }
-            return null;
+
+            return mytransactions.ToArray();
         }
         
         void Initialize()

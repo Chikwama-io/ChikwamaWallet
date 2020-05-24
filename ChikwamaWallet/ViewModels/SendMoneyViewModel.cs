@@ -167,7 +167,7 @@ namespace ChikwamaWallet.ViewModels
     
         async Task ExecuteViewHistoryCommand()
         {
-            await navService.PushAsync(new NavigationPage(new TransactionHistoryPage(navService, controller)));
+            await navService.PushAsync(new NavigationPage(new TabbedTransactionHistoryPage(navService, controller)));
         }
     }
 }
