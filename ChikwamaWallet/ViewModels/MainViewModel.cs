@@ -85,8 +85,14 @@ namespace ChikwamaWallet.ViewModels
                 },
                   new MenuItems()
                 {
-                     Title = "Cashpoints",
+                     Title = "Find Cashpoints",
                     ItemDetails = "View all near you",
+                    Icon = ""
+                },
+                  new MenuItems()
+                {
+                     Title = "Become a Cashpoints",
+                    ItemDetails = "Become a cashpoint",
                     Icon = ""
                 },
 

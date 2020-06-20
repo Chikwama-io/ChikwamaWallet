@@ -16,6 +16,7 @@ using Nethereum.StandardTokenEIP20;
 using Nethereum.StandardTokenEIP20.ContractDefinition;
 using System.Linq;
 using System.Numerics;
+using Nethereum.Hex.HexTypes;
 
 namespace ChikwamaWallet.Services
 {
@@ -31,11 +32,17 @@ namespace ChikwamaWallet.Services
         Task<TransactionModel[]> GetTransactionsAsync(bool sent = false);
 
         Task<string> TransferAsync(string from, string to, decimal amount);
+
+        Task<string> BecomeCashPointAsync(string accountAddress, string name, int latdeg, uint latmin, uint latsec, int longdeg, uint longmin, uint longsec, uint phone, uint rate, uint duration);
     }
     public class AccountManager : IAccountManager
     {
 
         const string CONTRACT_ADDRESS = "0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea";
+
+        const string CASHPOINT_CONTRACT_ADDRESS = "0x83b14AB87b51C25C1B5e6D9F67545D098d6692A3";
+
+        string CashPointContractABI = @"[{'anonymous':false,'inputs':[{'indexed':false,'internalType':'address','name':'cashpoint','type':'address'},{'indexed':false,'internalType':'string','name':'name','type':'string'},{'indexed':false,'internalType':'int256','name':'latdeg','type':'int256'},{'indexed':false,'internalType':'uint256','name':'latmin','type':'uint256'},{'indexed':false,'internalType':'uint256','name':'latsec','type':'uint256'},{'indexed':false,'internalType':'int256','name':'longdeg','type':'int256'},{'indexed':false,'internalType':'uint256','name':'longmin','type':'uint256'},{'indexed':false,'internalType':'uint256','name':'longsec','type':'uint256'},{'indexed':false,'internalType':'uint256','name':'rate','type':'uint256'},{'indexed':false,'internalType':'uint256','name':'endtime','type':'uint256'}],'name':'CreatedCashPoint','type':'event'},{'constant':true,'inputs':[],'name':'Count','outputs':[{'internalType':'uint256','name':'','type':'uint256'}],'payable':false,'stateMutability':'view','type':'function'},{'constant':false,'inputs':[{'internalType':'string','name':'name','type':'string'},{'internalType':'int256','name':'latdeg','type':'int256'},{'internalType':'uint256','name':'latmin','type':'uint256'},{'internalType':'uint256','name':'latsec','type':'uint256'},{'internalType':'int256','name':'longdeg','type':'int256'},{'internalType':'uint256','name':'longmin','type':'uint256'},{'internalType':'uint256','name':'longsec','type':'uint256'},{'internalType':'uint256','name':'phone','type':'uint256'},{'internalType':'uint256','name':'rate','type':'uint256'},{'internalType':'uint256','name':'duration','type':'uint256'}],'name':'addCashPoint','outputs':[],'payable':false,'stateMutability':'nonpayable','type':'function'}]";
 
         private readonly IWeb3ProviderService _web3ProviderService;
         
@@ -86,6 +93,26 @@ namespace ChikwamaWallet.Services
             var sendAmount = Web3.Convert.ToWei(amount);
             var receipt = await DaiTokenService.TransferRequestAndWaitForReceiptAsync(to, sendAmount);
             return receipt.TransactionHash;
+        }
+
+        public async Task<string> BecomeCashPointAsync(string accountAddress, string name, int latdeg, uint latmin, uint latsec, int longdeg, uint longmin, uint longsec, uint phone, uint rate, uint duration)
+        {
+            Contract CashPointContract = web3.Eth.GetContract(CashPointContractABI, CASHPOINT_CONTRACT_ADDRESS);
+
+            try
+            {
+                HexBigInteger gas = new HexBigInteger(new BigInteger(400000));
+                HexBigInteger value = new HexBigInteger(new BigInteger(0));
+                Task<string> addCashPointFunction = CashPointContract.GetFunction("addCashPoint").SendTransactionAsync(accountAddress, gas, value, name, latdeg, latmin, latsec, longdeg, longmin, longsec, phone, rate, duration);
+                await addCashPointFunction;
+                return "Success!";
+            }
+            catch (Exception e) 
+            {
+                return e.Message;
+            }
+
+            
         }
 
         public async Task<TransactionModel[]> GetTransactionsAsync(bool sent = false)
