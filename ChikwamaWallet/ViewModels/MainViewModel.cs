@@ -53,6 +53,10 @@ namespace ChikwamaWallet.ViewModels
             {
                 navService.PushAsync(new NavigationPage(new TabbedTransactionHistoryPage(navService, controller)));
             }
+            else if(SelectedMenuItem.Title=="Cashpoints")
+            {
+                navService.PushAsync(new NavigationPage(new CashPointPage()));
+            }
         }
         public MainViewModel(IChikwamaNavService navService, NewWalletController controller): base(navService)
         {

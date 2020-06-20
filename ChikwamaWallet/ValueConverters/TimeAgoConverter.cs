@@ -7,7 +7,7 @@ namespace ChikwamaWallet.ValueConverters
 {
     public class TimeAgoConverter : IValueConverter
     {
-        static DateTime baseTime = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+        static DateTime baseTime = new DateTime(1970, 1, 1, 0, 0, 0);
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
