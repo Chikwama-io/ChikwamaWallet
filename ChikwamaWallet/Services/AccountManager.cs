@@ -73,13 +73,20 @@ namespace ChikwamaWallet.Services
 
         public async Task<decimal> GetTokensAsync(string accountAddress)
         {
-            
 
-            var wei = await DaiTokenService.BalanceOfQueryAsync(accountAddress);
+            try
+            {
+                var wei = await DaiTokenService.BalanceOfQueryAsync(accountAddress);
+                return Web3.Convert.FromWei(wei);
+            }
+            catch (Exception e) 
+            {
+                return 0;
+            }
 
-            return Web3.Convert.FromWei(wei);
+
         }
-        
+
         public async Task<decimal> GetBalanceInETHAsync(string accountAddress)
         {
             var balanceInWei = await web3.Eth.GetBalance.SendRequestAsync(accountAddress);
@@ -91,8 +98,17 @@ namespace ChikwamaWallet.Services
         public async Task<string> TransferAsync(string from, string to, decimal amount)
         {            
             var sendAmount = Web3.Convert.ToWei(amount);
-            var receipt = await DaiTokenService.TransferRequestAndWaitForReceiptAsync(to, sendAmount);
-            return receipt.TransactionHash;
+
+            try
+            {
+                var receipt = await DaiTokenService.TransferRequestAndWaitForReceiptAsync(to, sendAmount);
+                return receipt.TransactionHash;
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
+
         }
 
         public async Task<string> BecomeCashPointAsync(string accountAddress, string name, int latdeg, uint latmin, uint latsec, int longdeg, uint longmin, uint longsec, uint phone, uint rate, uint duration)
@@ -122,11 +138,14 @@ namespace ChikwamaWallet.Services
 
             var web3 = new Web3("https://rinkeby.infura.io/v3/7238211010344719ad14a89db874158c");
 
-            Task StoreLogAsync(EventLog<TransferEventDTO> eventLog)
+            try
             {
-                transferEventLogs.Add(eventLog);
-                return Task.CompletedTask;
-            }
+                Task StoreLogAsync(EventLog<TransferEventDTO> eventLog)
+                {
+                    transferEventLogs.Add(eventLog);
+                    return Task.CompletedTask;
+                }
+            
             //create our processor to retrieve transfers
             //restrict the processor to Transfers
             var processor = web3.Processing.Logs.CreateProcessorForContract<TransferEventDTO>(
@@ -142,7 +161,10 @@ namespace ChikwamaWallet.Services
                 cancellationToken: cancellationToken,
                 startAtBlockNumberIfNotProcessed: StartofWeek);
 
-
+            }
+            catch (Exception e)
+            {
+            }
 
             List<TransactionModel> mytransactions = new List<TransactionModel>();
             foreach (var eventlog in transferEventLogs)
