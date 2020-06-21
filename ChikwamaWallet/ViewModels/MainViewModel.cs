@@ -49,13 +49,17 @@ namespace ChikwamaWallet.ViewModels
             {
                 navService.PushAsync(new NavigationPage(new SendMoneyPage(navService, controller)));
             }
-            else if(SelectedMenuItem.Title == "Transactions")
+            else if (SelectedMenuItem.Title == "Transactions")
             {
                 navService.PushAsync(new NavigationPage(new TabbedTransactionHistoryPage(navService, controller)));
             }
-            else if(SelectedMenuItem.Title=="Cashpoints")
+            else if (SelectedMenuItem.Title == "Find Cashpoints")
             {
                 navService.PushAsync(new NavigationPage(new CashPointPage()));
+            }
+            else if (SelectedMenuItem.Title == "Become Cashpoint")
+            {
+                navService.PushAsync(new NavigationPage(new BecomeCashPointPage(navService, controller)));
             }
         }
         public MainViewModel(IChikwamaNavService navService, NewWalletController controller): base(navService)
@@ -86,12 +90,12 @@ namespace ChikwamaWallet.ViewModels
                   new MenuItems()
                 {
                      Title = "Find Cashpoints",
-                    ItemDetails = "View all near you",
+                    ItemDetails = "View all CashPoints near you",
                     Icon = ""
                 },
                   new MenuItems()
                 {
-                     Title = "Become a Cashpoints",
+                     Title = "Become Cashpoint",
                     ItemDetails = "Become a cashpoint",
                     Icon = ""
                 },

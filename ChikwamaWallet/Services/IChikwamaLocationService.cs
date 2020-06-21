@@ -13,7 +13,7 @@ namespace ChikwamaWallet.Services
         event EventHandler<IChikwamaLocationCoords> MyLocation;
     }
 
-    //	Walk	Location	Coordinates	Obtained	
+    //	Walk Location Coordinates	Obtained	
     public interface IChikwamaLocationCoords
     {
         double latitude { get; set; }
