@@ -1,6 +1,8 @@
 ﻿using ChikwamaWallet.Services;
+using Nethereum.Hex.HexTypes;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -64,18 +66,12 @@ namespace ChikwamaWallet.ViewModels
 
         async Task ExecuteBecomeCashPointCommand()
         {
-            var sec = (int)Math.Round(MyLat * 3600);
-            var latdeg = (int)Math.Round(MyLat);
-              var latsec = (uint)Math.Abs(sec % 3600);
-            var latmin = (uint)latsec /60;
-
-            sec = (int)Math.Round(MyLong * 3600);
-            var longdeg = (int)Math.Round(MyLong);
-            var longsec = (uint)Math.Abs(sec % 3600);
-            var longmin = (uint)longsec /60;
+            BigInteger latitude = Nethereum.Util.UnitConversion.Convert.ToWei(MyLat);
+            BigInteger longitude = Nethereum.Util.UnitConversion.Convert.ToWei(MyLong);
 
 
-            var result = await accountsManager.BecomeCashPointAsync(DefaultAccountAddress, CashPointName, latdeg, latmin, latsec, longdeg, longmin, longsec,Phone,Rate,2);
+
+            var result = await accountsManager.BecomeCashPointAsync(DefaultAccountAddress, CashPointName, latitude, longitude,Phone,Rate,2);
             await navService.DisplayAlert("Send Result", $"tx:{result}", "ok", "cancel");
 
         }

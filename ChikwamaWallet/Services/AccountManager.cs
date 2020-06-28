@@ -33,7 +33,7 @@ namespace ChikwamaWallet.Services
 
         Task<string> TransferAsync(string from, string to, decimal amount);
 
-        Task<string> BecomeCashPointAsync(string accountAddress, string name, int latdeg, uint latmin, uint latsec, int longdeg, uint longmin, uint longsec, uint phone, uint rate, uint duration);
+        Task<string> BecomeCashPointAsync(string accountAddress, string name,BigInteger latitude,BigInteger longitude, uint phone, uint rate, uint duration);
     }
     public class AccountManager : IAccountManager
     {
@@ -111,7 +111,7 @@ namespace ChikwamaWallet.Services
 
         }
 
-        public async Task<string> BecomeCashPointAsync(string accountAddress, string name, int latdeg, uint latmin, uint latsec, int longdeg, uint longmin, uint longsec, uint phone, uint rate, uint duration)
+        public async Task<string> BecomeCashPointAsync(string accountAddress, string name, BigInteger latitude, BigInteger longitude, uint phone, uint rate, uint duration)
         {
             Contract CashPointContract = web3.Eth.GetContract(CashPointContractABI, CASHPOINT_CONTRACT_ADDRESS);
 
@@ -119,7 +119,8 @@ namespace ChikwamaWallet.Services
             {
                 HexBigInteger gas = new HexBigInteger(new BigInteger(400000));
                 HexBigInteger value = new HexBigInteger(new BigInteger(0));
-                Task<string> addCashPointFunction = CashPointContract.GetFunction("addCashPoint").SendTransactionAsync(accountAddress, gas, value, name, latdeg, latmin, latsec, longdeg, longmin, longsec, phone, rate, duration);
+
+                Task<string> addCashPointFunction = CashPointContract.GetFunction("addCashPoint").SendTransactionAsync(accountAddress, gas, value, name, latitude, longitude, phone, rate, duration);
                 await addCashPointFunction;
                 return "Success!";
             }
