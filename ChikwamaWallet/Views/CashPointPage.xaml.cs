@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ChikwamaWallet.Services;
+using ChikwamaWallet.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,11 +14,12 @@ namespace ChikwamaWallet.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CashPointPage : ContentPage
     {
-        public CashPointPage()
+        public CashPointPage(IChikwamaNavService navService, NewWalletController controller)
         {
             InitializeComponent();
-            Title = "Find a Cashpoint";
-   
+            BindingContext = new CashPointViewModel(navService, controller);
+
+
         }
 
     }

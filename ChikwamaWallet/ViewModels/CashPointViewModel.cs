@@ -1,21 +1,23 @@
-﻿using ChikwamaWallet.Services;
-using Nethereum.Hex.HexTypes;
+﻿using ChikwamaWallet.Models;
+using ChikwamaWallet.Services;
 using System;
 using System.Collections.Generic;
-using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+using Xamarin.Forms.Maps;
 
 namespace ChikwamaWallet.ViewModels
 {
-    class BecomeCashPointViewModel: ChikwamaBaseViewModel
+    class CashPointViewModel : ChikwamaBaseViewModel
     {
         readonly IAccountManager accountsManager;
         readonly NewWalletController controller;
         readonly IChikwamaNavService navService;
+
+        public Xamarin.Forms.Maps.Map CashPointsMap { get; private set; }
 
         string _CashPointName;
         public string CashPointName
@@ -44,39 +46,62 @@ namespace ChikwamaWallet.ViewModels
             get { return _Cost; }
             set { _Cost = value; OnPropertyChanged(); }
         }
-
+        
         double MyLat;
         double MyLong;
+
+        public Position Position { get; set; }
+
+        AccountModel[] _CashPoints;
+        public AccountModel[] CashPoints
+        {
+            get { return _CashPoints; }
+            set { _CashPoints = value; OnPropertyChanged(); }
+        }
         public string DefaultAccountAddress => accountsManager.DefaultAccountAddress;
 
-        public ICommand BecomeCashPointCommand { get; set; }
 
-        public BecomeCashPointViewModel(IChikwamaNavService navService, NewWalletController controller) : base(navService)
+        public CashPointViewModel(IChikwamaNavService navService, NewWalletController controller) : base(navService)
         {
             this.controller = controller;
             this.accountsManager = new AccountManager(controller);
             this.navService = navService;
 
+            
 
-            BecomeCashPointCommand = new Command(async () => await ExecuteBecomeCashPointCommand());
+            GetCashPoints();
+
         }
 
-
-        async Task ExecuteBecomeCashPointCommand()
+        async void GetCashPoints()
         {
             var location = await Geolocation.GetLastKnownLocationAsync();
             MyLat = location.Latitude;
             MyLong = location.Longitude;
 
-            BigInteger latitude = Nethereum.Util.UnitConversion.Convert.ToWei(MyLat);
-            BigInteger longitude = Nethereum.Util.UnitConversion.Convert.ToWei(MyLong);
+            CashPoints = await accountsManager.GetCashPointsAsync();
 
+            CashPointsMap = new Xamarin.Forms.Maps.Map();
 
-
-            var result = await accountsManager.BecomeCashPointAsync(DefaultAccountAddress, CashPointName, latitude, longitude,Phone,Rate,2);
-            await navService.DisplayAlert("Send Result", $"tx:{result}", "ok", "cancel");
+            if (CashPoints != null)
+            {
+                foreach (var cashpoint in CashPoints)
+                {
+                    // Place a pin on the map for each cash point
+                    CashPointsMap.Pins.Add(new Pin
+                    {
+                        Type = PinType.Place,
+                        Label = cashpoint.AccountName,
+                        Position = new Position(cashpoint.Latitude, cashpoint.Longitude)
+                    });
+                }
+            }
+                // Center the map around the list of walks entry's location
+                CashPointsMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(MyLat, MyLong), Distance.FromKilometers(1.0)));
+            
 
         }
+
         public override async Task Init()
         {
         }

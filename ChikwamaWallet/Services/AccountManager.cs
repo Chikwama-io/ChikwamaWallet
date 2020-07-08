@@ -31,6 +31,8 @@ namespace ChikwamaWallet.Services
 
         Task<TransactionModel[]> GetTransactionsAsync(bool sent = false);
 
+        Task<AccountModel[]> GetCashPointsAsync();
+
         Task<string> TransferAsync(string from, string to, decimal amount);
 
         Task<string> BecomeCashPointAsync(string accountAddress, string name,BigInteger latitude,BigInteger longitude, uint phone, uint rate, uint duration);
@@ -63,13 +65,14 @@ namespace ChikwamaWallet.Services
             DaiTokenService = new StandardTokenService(web3, CONTRACT_ADDRESS);
         }
 
-        /*
-        public async Task<string[]> GetAccountsAsync()
+        
+        public async Task<AccountModel[]> GetCashPointsAsync()
         {
-            return new string[] { DefaultAccountAddress };
+            int count = 0;
+            return new AccountModel[count];
         }
 
-        */
+        
 
         public async Task<decimal> GetTokensAsync(string accountAddress)
         {

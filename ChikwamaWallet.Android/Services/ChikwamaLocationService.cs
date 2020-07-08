@@ -67,7 +67,7 @@ namespace ChikwamaWallet.Droid.Services
 		// Method to call to start getting location
 		public async void GetMyLocation()
 		{
-			Xamarin.Essentials.Location location = await Geolocation.GetLastKnownLocationAsync();
+			Xamarin.Essentials.Location location = await Geolocation.GetLocationAsync();
 			newLocation = location;
 		}
 
